@@ -1,6 +1,9 @@
 package com.globomed.learn
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -30,6 +33,7 @@ class EmployeeListAdapter(
 		val employee = employeeList[position]
 
 		holder.setData(employee)
+		holder.setListener()
 	}
 
 	fun setEmployees(employeeList: ArrayList<Employee>) {
@@ -38,12 +42,25 @@ class EmployeeListAdapter(
 		notifyDataSetChanged()
 	}
 
-	class EmployeeViewHolder(itemView: View)  : RecyclerView.ViewHolder(itemView) {
+	inner class EmployeeViewHolder(itemView: View)  : RecyclerView.ViewHolder(itemView) {
 
 
 		fun setData(employee: Employee) {
 			itemView.tvEmpName.text = employee.name
 			itemView.tvEmpDesignation.text = employee.designation
+			itemView.tvIsSurgeonConfirm.text =
+				if(1 == employee.isSurgeon) "YES"
+				else "NO"
+		}
+
+		fun setListener() {
+			itemView.setOnClickListener {
+
+				val intent = Intent(context, UpdateEmployeeActivity::class.java)
+				intent.putExtra(GloboMedDBContact.EmployeeEntry.COLUMN_ID, employeeList[adapterPosition].id)
+				(context as Activity).startActivityForResult(intent, 1)
+
+			}
 		}
 
 	}

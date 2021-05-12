@@ -6,6 +6,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
+import com.globomed.learn.GloboMedDBContact.EmployeeEntry
 import com.globomed.learn.databinding.ActivityAddBinding
 import java.text.SimpleDateFormat
 import java.util.*
@@ -42,7 +43,7 @@ class AddEmployeeActivity : Activity() {
         }
 
         binding.bCancel.setOnClickListener {
-
+            finish()
         }
     }
 
@@ -65,14 +66,17 @@ class AddEmployeeActivity : Activity() {
             val name = binding.etEmpName.text.toString()
             val designation = binding.etDesignation.text.toString()
             val dob = myCalendar.timeInMillis
+            val isSurgeon  = if(binding.sSurgeon.isChecked) 1 else 0
 
             val db = databaseHelper.writableDatabase
-            val values = ContentValues()
-            values.put(GloboMedDBContact.EmployeeEntry.COLUMN_NAME, name)
-            values.put(GloboMedDBContact.EmployeeEntry.COLUMN_DESIGNATION, designation)
-            values.put(GloboMedDBContact.EmployeeEntry.COLUMN_DOB, dob)
 
-            var result = db.insert(GloboMedDBContact.EmployeeEntry.TABLE_NAME, null, values)
+            val values = ContentValues()
+            values.put(EmployeeEntry.COLUMN_NAME, name)
+            values.put(EmployeeEntry.COLUMN_DESIGNATION, designation)
+            values.put(EmployeeEntry.COLUMN_DOB, dob)
+            values.put(EmployeeEntry.COLUMN_SURGEON, isSurgeon)
+
+            var result = db.insert(EmployeeEntry.TABLE_NAME, null, values)
             setResult(RESULT_OK, Intent())
             Toast.makeText(this, "Employee Added", Toast.LENGTH_SHORT).show()
             finish()
